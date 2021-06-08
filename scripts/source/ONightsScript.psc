@@ -10,6 +10,9 @@ bool debugbuild = false
 
 AssociationType Spouse
 
+AssociationType Courting
+
+
 bool oromanceInstalled
 
 ReferenceAlias Nav1
@@ -55,6 +58,8 @@ Event OnInit()
 	oromanceInstalled = ostim.IsModLoaded("ORomance.esp")
 	Spouse = Game.GetFormFromFile(0x0142CA, "Skyrim.esm") as AssociationType
 
+	Courting = Game.GetFormFromFile(0x01EE23, "Skyrim.esm") as AssociationType
+
 	quest q = self as quest 
 	Nav1 = q.GetAliasById(0) as ReferenceAlias
 	Nav2 = q.GetAliasById(1) as ReferenceAlias
@@ -94,9 +99,10 @@ function test()
 
 	;ostim.StartScene(target, game.GetCurrentCrosshairRef() as actor )
 ;	debug.SendAnimationEvent(playerref, "IdleComeThisWay")
-
+	
+	console(HasGFBF(target))
 	;console(ostim.randomint(0, 1))
-	ScanForSex()	
+	;ScanForSex()	
 	;console(GetTimeUntilNight())
 
 	;Console(IsSettlement(playerref.GetCurrentLocation()))
@@ -233,6 +239,7 @@ Actor Function FindCompatiblePartner(actor act)
 
 	bool female = ostim.AppearsFemale(act)
 	bool married = IsMarried(act)
+	bool courted = HasGFBF(act)
 
 	int i = 0
 	int l = actors.length 
@@ -247,6 +254,10 @@ Actor Function FindCompatiblePartner(actor act)
 
 			If married 
 				if IsNPCSpouse(act, partner)
+					return partner
+				endif 
+			elseif courted
+				if IsNPCGFBF(act, partner)
 					return partner
 				endif 
 			else 
@@ -521,6 +532,15 @@ EndFunction
 
 bool function IsNPCSpouse(actor npc, actor otherNPC)
 	return npc.HasAssociation(spouse, othernpc)
+endfunction 
+
+
+bool Function HasGFBF(actor npc)
+	return npc.HasAssociation(Courting)
+EndFunction
+
+bool function IsNPCGFBF(actor npc, actor otherNPC)
+	return npc.HasAssociation(Courting, othernpc)
 endfunction 
 
 
