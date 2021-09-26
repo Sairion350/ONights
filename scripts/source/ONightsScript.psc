@@ -22,6 +22,8 @@ ReferenceAlias TargetRef
 actor[] actors
 
 faction followerfaction
+faction playermarriedfaction
+actor seranaref
 
 float lastSexTime
 
@@ -66,6 +68,8 @@ Event OnInit()
 	TargetRef = q.GetAliasById(2) as ReferenceAlias
 
 	followerfaction = Game.GetFormFromFile(0x05C84E, "Skyrim.esm") as faction
+	playermarriedfaction=Game.GetFormFromFile(0x0c6472,"Skyrim.esm") as faction
+	seranaref=Game.GetFormFromFile(0x002b74,"Dawnguard.esm") as actor
 
 	LocTypeTown = Keyword.GetKeyword("LocTypeTown")
 	LocTypeCity = Keyword.GetKeyword("LocTypeCity")
@@ -463,7 +467,7 @@ ObjectReference Function FindBed(ObjectReference CenterRef, Float Radius = 0.0, 
 EndFunction
 
 Bool Function IsActorInvalid(actor act)
-	If  (act == none) || (act.IsInCombat()) || (act.IsGhost()) || (act == playerref) || (act.IsDead())  || (act.IsDisabled())|| !(act.is3dloaded()) || ostim.IsChild(act) || !(act.GetRace().HasKeyword(Keyword.GetKeyword("ActorTypeNPC"))) || (isplayerpartner(act)) || act.IsInDialogueWithPlayer() ||ostim.IsActorActive(act) || act.Isinfaction(followerfaction)
+	If  (act == none) || (act.IsInCombat()) || (act.IsGhost()) || (act == playerref) || (act.IsDead())  || (act.IsDisabled())|| !(act.is3dloaded()) || ostim.IsChild(act) || !(act.GetRace().HasKeyword(Keyword.GetKeyword("ActorTypeNPC"))) || (isplayerpartner(act)) || act.IsInDialogueWithPlayer() ||ostim.IsActorActive(act) || act.Isinfaction(followerfaction) || (act==seranaref) || act.Isinfaction(playermarriedfaction)
 		If debugbuild
 			console("Invalid: " + act.GetDisplayName())
 		endif
